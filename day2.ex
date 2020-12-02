@@ -25,17 +25,11 @@ defmodule Day2 do
 
   defp parse(lines) do
     Enum.reduce(lines, 0, fn line, acc ->
-      policy_and_password = String.split(line, ":", trim: true)
-      minmax_and_letter = String.split(Enum.at(policy_and_password, 0), " ")
-      min_max = String.split(Enum.at(minmax_and_letter, 0), "-")
-      letter = Enum.at(minmax_and_letter, 1)
-      password = Enum.at(policy_and_password, 1)
+      [policy, password] = String.split(line, ": ", trim: true)
+      [minmax, letter] = String.split(policy, " ", trim: true)
+      [minelem, maxelem] = String.split(minmax, "-", trim: true)
 
-      # IO.puts(
-      #   "min: #{Enum.at(min_max, 0)}, max: #{Enum.at(min_max, 1)}, letter: #{letter}, password: #{
-      #     password
-      #   }"
-      # )
+      # IO.puts("min: #{minelem}, max: #{maxelem}, letter: #{letter}, password: #{password}")
 
       counts =
         password
@@ -47,12 +41,7 @@ defmodule Day2 do
       lcount = Map.get(counts, letter)
       IO.inspect(counts)
 
-      minelem = Enum.at(min_max, 0) |> String.to_integer()
-      maxelem = Enum.at(min_max, 1) |> String.to_integer()
-
-      # IO.puts("lcount #{lcount}, min: #{minelem}, max: #{maxelem}, acc: #{acc}")
-
-      if lcount >= minelem && lcount <= maxelem do
+      if lcount >= String.to_integer(minelem) && lcount <= String.to_integer(maxelem) do
         acc + 1
       else
         acc
@@ -62,18 +51,14 @@ defmodule Day2 do
 
   defp parse_policy2(lines) do
     Enum.reduce(lines, 0, fn line, acc ->
-      policy_and_password = String.split(line, ": ", trim: true)
-      minmax_and_letter = String.split(Enum.at(policy_and_password, 0), " ", trim: true)
-      min_max = String.split(Enum.at(minmax_and_letter, 0), "-", trim: true)
-      letter = Enum.at(minmax_and_letter, 1)
-      password = Enum.at(policy_and_password, 1)
-      minelem = Enum.at(min_max, 0) |> String.to_integer()
-      maxelem = Enum.at(min_max, 1) |> String.to_integer()
+      [policy, password] = String.split(line, ": ", trim: true)
+      [minmax, letter] = String.split(policy, " ", trim: true)
+      [minelem, maxelem] = String.split(minmax, "-", trim: true)
 
       # IO.puts("min: #{minelem}, max: #{maxelem}, letter: #{letter}, password: '#{password}'")
 
-      minidx = minelem - 1
-      maxidx = maxelem - 1
+      minidx = String.to_integer(minelem) - 1
+      maxidx = String.to_integer(maxelem) - 1
 
       first = String.slice(password, minidx..minidx)
       second = String.slice(password, maxidx..maxidx)
