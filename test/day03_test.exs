@@ -3,11 +3,11 @@ defmodule Day03Test do
   doctest Aoc2020.Day03
   import Aoc2020.Day03
 
-  @tag: skip
+  @tag :skip
   test "part1" do
   end
 
-  @tag: skip
+  @tag :skip
   test "part2" do
   end
 end
