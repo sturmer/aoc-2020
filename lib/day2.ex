@@ -1,6 +1,6 @@
-defmodule Day2 do
+defmodule Aoc2020.Day2 do
   def solve1 do
-    case File.read("day2.input.txt") do
+    case File.read("../day2.input.txt") do
       {:ok, content} ->
         content
         |> String.split("\n", trim: true)
@@ -23,7 +23,7 @@ defmodule Day2 do
     end
   end
 
-  defp parse(lines) do
+  def parse(lines) do
     Enum.reduce(lines, 0, fn line, acc ->
       [policy, password] = String.split(line, ": ", trim: true)
       [minmax, letter] = String.split(policy, " ", trim: true)
@@ -39,7 +39,7 @@ defmodule Day2 do
         end)
 
       lcount = Map.get(counts, letter)
-      IO.inspect(counts)
+      # IO.inspect(counts)
 
       if lcount >= String.to_integer(minelem) && lcount <= String.to_integer(maxelem) do
         acc + 1
@@ -49,7 +49,7 @@ defmodule Day2 do
     end)
   end
 
-  defp parse_policy2(lines) do
+  def parse_policy2(lines) do
     Enum.reduce(lines, 0, fn line, acc ->
       [policy, password] = String.split(line, ": ", trim: true)
       [minmax, letter] = String.split(policy, " ", trim: true)

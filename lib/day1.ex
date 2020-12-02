@@ -1,6 +1,6 @@
-defmodule Day1 do
+defmodule Aoc2020.Day1 do
   def solve(part) do
-    case File.read("day1.input.txt") do
+    case File.read("../day1.input.txt") do
       {:ok, content} ->
         content
         |> String.split("\n", trim: true)
@@ -29,7 +29,7 @@ defmodule Day1 do
     second = find_sum(tail, set, 2020 - head)
 
     if second != false && MapSet.member?(set, 2020 - (head + second)) do
-      IO.puts(head * second * (2020 - head - second))
+      head * second * (2020 - head - second)
     else
       find_three_sum_recur(tail, set)
     end
@@ -37,6 +37,7 @@ defmodule Day1 do
 
   defp find_three_sum_recur(_, _set) do
     IO.puts("not found")
+    -1
   end
 
   # Find the residual sum, return the second element.
@@ -55,14 +56,14 @@ defmodule Day1 do
     false
   end
 
-  defp find_two_sum(lines) do
+  def find_two_sum(lines) do
     set = MapSet.new(lines)
     recur_one(lines, set)
   end
 
   defp recur_one([head | tail], set) do
     if MapSet.member?(set, 2020 - head) do
-      IO.puts(head * (2020 - head))
+      head * (2020 - head)
     else
       recur_one(tail, set)
     end
@@ -70,7 +71,8 @@ defmodule Day1 do
 
   defp recur_one(_, _set) do
     IO.puts("Not found")
+    -1
   end
 end
 
-Day1.solve(:two)
+Aoc2020.Day1.solve(:two)
