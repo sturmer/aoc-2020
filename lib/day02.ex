@@ -1,4 +1,4 @@
-defmodule Aoc2020.Day2 do
+defmodule Aoc2020.Day02 do
   def solve1 do
     case File.read("../day2.input.txt") do
       {:ok, content} ->
