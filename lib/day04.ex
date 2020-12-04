@@ -62,57 +62,25 @@ defmodule Aoc2020.Day04 do
     cnt
   end
 
+  defp check_property("byr", year), do: check_year(year, 1920, 2002)
+  defp check_property("iyr", year), do: check_year(year, 2010, 2020)
+  defp check_property("eyr", year), do: check_year(year, 2020, 2030)
+  defp check_property("hgt", height), do: check_height(height)
+  defp check_property("hcl", code), do: String.match?(code, ~r/^#[0-9a-f]{6}$/)
+
+  defp check_property("ecl", color),
+    do: color in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+
+  defp check_property("pid", pid), do: String.match?(pid, ~r/^[0-9]{9}$/)
+
   def are_all_fields_valid(bag) do
     Enum.all?(
       ~w(byr iyr eyr hgt hcl ecl pid),
-      fn x ->
-        # IO.puts("x is #{x}, bag(x): #{Map.get(bag, x)}")
-
-        case x do
-          "byr" ->
-            Map.get(bag, x)
-            |> check_year(1920, 2002)
-
-          "iyr" ->
-            Map.get(bag, x)
-            |> check_year(2010, 2020)
-
-          "eyr" ->
-            Map.get(bag, x)
-            |> check_year(2020, 2030)
-
-          "hgt" ->
-            # IO.puts("hgt")
-
-            Map.get(bag, x)
-            |> check_height()
-
-          "hcl" ->
-            # IO.puts("hcl")
-            Map.get(bag, x) |> String.match?(~r/^#[0-9a-f]{6}$/)
-
-          "ecl" ->
-            # IO.puts("ecl")
-            value = Map.get(bag, x)
-
-            Enum.any?(
-              ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"],
-              fn x -> value == x end
-            )
-
-          "pid" ->
-            Map.get(bag, x) |> String.match?(~r/^[0-9]{9}$/)
-
-          true ->
-            true
-        end
-      end
+      &check_property(&1, Map.get(bag, &1))
     )
   end
 
   def check_height(h) do
-    # IO.puts(h)
-
     cond do
       String.match?(h, ~r/^\d+cm$/) ->
         value = String.replace(h, ~r/^(\d+)cm$/, "\\1") |> String.to_integer()
@@ -146,5 +114,3 @@ defmodule Aoc2020.Day04 do
     end
   end
 end
-
-Aoc2020.Day04.solve2()
