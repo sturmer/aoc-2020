@@ -1,22 +1,16 @@
 defmodule Aoc2020.Day04 do
   def solve1 do
-    case File.read("day4.input.txt") do
-      {:ok, content} ->
-        String.split(content, "\n\n", trim: true) |> count_passports(0) |> IO.puts()
-
-      # do something
-
-      {:error, _} ->
-        IO.puts("Error reading file")
-    end
+    parse_and_solve(&Aoc2020.Day04.count_passports/2)
   end
 
   def solve2 do
+    parse_and_solve(&Aoc2020.Day04.count_passports_strict/2)
+  end
+
+  defp parse_and_solve(fun) do
     case File.read("day4.input.txt") do
       {:ok, content} ->
-        String.split(content, "\n\n", trim: true) |> count_passports_strict(0) |> IO.puts()
-
-      # do something
+        String.split(content, "\n\n", trim: true) |> fun.(0) |> IO.puts()
 
       {:error, _} ->
         IO.puts("Error reading file")
@@ -44,7 +38,7 @@ defmodule Aoc2020.Day04 do
 
   def has_all_fields(bag) do
     Enum.all?(
-      ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"],
+      ~w(byr iyr eyr hgt hcl ecl pid),
       fn x -> Map.has_key?(bag, x) end
     )
   end
@@ -69,15 +63,8 @@ defmodule Aoc2020.Day04 do
   end
 
   def are_all_fields_valid(bag) do
-    # TODO(gianluca): Remove when done
-    # IO.puts(
-    #   "------------@@@> #{__MODULE__}" <>
-    #     ".#{Kernel.elem(__ENV__.function, 0)}:#{__ENV__.line}" <>
-    #     " - bag: #{inspect(bag, pretty: true)}"
-    # )
-
     Enum.all?(
-      ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"],
+      ~w(byr iyr eyr hgt hcl ecl pid),
       fn x ->
         # IO.puts("x is #{x}, bag(x): #{Map.get(bag, x)}")
 
@@ -150,15 +137,6 @@ defmodule Aoc2020.Day04 do
     else
       case Integer.parse(year_as_string) do
         {year, _} ->
-          # if year >= l && year <= r do
-          # else
-          #   IO.puts("year invalid: #{year_as_string}, l: #{l}, r: #{r}")
-          # end
-
-          # IO.puts(
-          #   "year is #{year}, l #{l}, r #{r}, year >= l && year <= r: #{year >= l && year <= r}"
-          # )
-
           year >= l && year <= r
 
         :error ->
