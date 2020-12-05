@@ -26,12 +26,4 @@ defmodule Day05Test do
     assert find_seat(String.codepoints("RRR"), 0, 7) == 7
     assert find_seat(String.codepoints("RLL"), 0, 7) == 4
   end
-
-  @tag :skip
-  test "part2" do
-    # fake_input = """
-    # """
-
-    # assert count_passports_strict(String.split(fake_input, "\n\n", trim: true), 0) == 4
-  end
 end

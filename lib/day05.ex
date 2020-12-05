@@ -19,28 +19,23 @@ defmodule Aoc2020.Day05 do
 
   def highest_id(boarding_passes) do
     Enum.reduce(boarding_passes, -1, fn bp, acc ->
-      acc = max(get_id(String.codepoints(bp)), acc)
-      acc
+      max(get_id(String.codepoints(bp)), acc)
     end)
   end
 
-  # Wanted to do some binary search but ended up going brute force. This prints
-  # all the missing boarding passes (there are 897 rows in the input file). Ran
-  # it once to see how it worked, but it printed a pretty predictable pattern:
-  # the numbers
+  # Wanted to do some binary search but an easy visual inspection did the trick.
+  # This prints all the missing boarding passes in the range 1..897 (there are 897
+  # rows in the input file). I ran it once to see how it worked, and it printed
+  # very few rows in a pretty predictable pattern:
+  # the numbers 1-67, and 524.
   def missing_bps(boarding_passes) do
     ids = Enum.map(boarding_passes, fn bp -> get_id(String.codepoints(bp)) end)
 
-    # missing = []
-
-    for x <- 0..897 do
+    for x <- 1..897 do
       if !(x in ids) do
-        # ^missing = [x | missing]
         IO.puts(x)
       end
     end
-
-    # missing
   end
 
   def get_id(cps) do
