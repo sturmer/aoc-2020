@@ -35,15 +35,13 @@ defmodule Aoc2020.Day08 do
     run_executions(program, [
       %InstructionRecord{decoded_instruction: i0}
     ])
-
-    nil
   end
 
   def run_executions(program, [h | rest]) do
     cond do
       h.pc >= length(program) - 1 ->
-        IO.puts("Result: #{h.acc}")
-        run_executions(program, [])
+        # IO.puts("Result: #{h.acc}")
+        h.acc
 
       MapSet.member?(h.executed, h.pc) ->
         # IO.puts(
@@ -186,11 +184,27 @@ defmodule Aoc2020.Day08 do
             ]
 
             run_executions(program, rest)
+            # run_executions(program, enqueue_instr_after_nop(program, h, rest))
         end
     end
   end
 
   def run_executions(_program, []), do: IO.puts("Out of execution paths!")
+
+  def enqueue_instr_after_nop(program, record, rest) do
+    i_after_nop = parse_instruction(Enum.at(program, record.pc + 1))
+
+    [
+      %InstructionRecord{
+        decoded_instruction: i_after_nop,
+        changed?: false,
+        pc: record.pc + 1,
+        executed: MapSet.put(record.executed, record.pc),
+        acc: record.acc
+      }
+      | rest
+    ]
+  end
 
   def execute_next(acc, program, i, executed) do
     if i < 0 || i > length(program) || MapSet.member?(executed, i) do

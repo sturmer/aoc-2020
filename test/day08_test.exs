@@ -29,10 +29,18 @@ defmodule Day08Test do
   end
 
   test "part 2" do
-    solve2()
+    res =
+      case File.read("day8.input.txt") do
+        {:ok, content} ->
+          String.split(content, "\n", trim: true) |> fix_program()
+
+        {:error, _} ->
+          IO.puts("Error reading file")
+      end
+
+    assert res == 515
   end
 
-  @tag :skip
   test "part 2, change nop" do
     #  acc +1
     #  -> nop +3
@@ -54,7 +62,6 @@ defmodule Day08Test do
            ) == 3
   end
 
-  @tag :skip
   test "part 2, change jmp" do
     #  nop +0
     #  acc +1
