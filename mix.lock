@@ -1,0 +1,5 @@
+%{
+  "constructor": {:hex, :constructor, "1.1.0", "0b6fa141ea06408c181a1fcda049c85c6b879aa3a2f547876f77fd53162df40b", [:mix], [{:morphix, "~> 0.6", [hex: :morphix, repo: "hexpm", optional: false]}, {:typed_struct, "~> 0.1.4", [hex: :typed_struct_uberbrodt, repo: "hexpm", optional: false]}], "hexpm", "ff72dc5a4b400b3051e675bad17af3962218dbef28fa7b7633195a08e12158ec"},
+  "morphix": {:hex, :morphix, "0.8.1", "5342f2baf8b3385e63a1d4ef7586f1d6f89b66e3ae9615fe3b1a85e5e3ff0ddb", [:mix], [], "hexpm", "e2cfd750dcc25c48b1dd97304fcb167f4ccaefc133fa2b9b4cb8619678fac1e3"},
+  "typed_struct": {:hex, :typed_struct_uberbrodt, "0.1.4", "93646851018a5fdf6c3314af89efecb0a219e321b76909d3d9b434e0a48550cb", [:mix], [], "hexpm", "4729710672e5a273d3614056fa6e15af649ca7cd2dc181a58c5d8d8517e39ac2"},
+}
