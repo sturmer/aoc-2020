@@ -11,10 +11,5 @@ defmodule Aoc2020.Day08.InstructionRecordMaker do
     }
   end
 
-  # FIXME(gianluca): just do new in the struct module and use things like
-  # def new(%InstructionRecord{} = record, a, b, c,...) do
-  #   %{record | a: a}
-  # ...
-  # end
-  # possible?
+  # FIXME(gianluca): OK I can't find a better way
 end
