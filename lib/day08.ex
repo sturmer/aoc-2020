@@ -54,151 +54,78 @@ defmodule Aoc2020.Day08 do
         # We still can make changes
         case h.decoded_instruction do
           {:acc, value} ->
-            i_after_acc = parse_instruction(Enum.at(program, h.pc + 1))
-
-            run_executions(program, [
-              %InstructionRecord{
-                decoded_instruction: i_after_acc,
-                changed?: false,
-                pc: h.pc + 1,
-                executed: MapSet.put(h.executed, h.pc),
-                acc: h.acc + value
-              }
-              | rest
-            ])
+            run_executions(program, enqueue_instr_after_acc(program, h, rest, false, value))
 
           {:jmp, offset} ->
             # Add 2 alternatives to stack: nop and jmp
-            # Add nop
-            i_after_nop = parse_instruction(Enum.at(program, h.pc + 1))
-
-            rest = [
-              %InstructionRecord{
-                decoded_instruction: i_after_nop,
-                changed?: true,
-                pc: h.pc + 1,
-                executed: MapSet.put(h.executed, h.pc),
-                acc: h.acc
-              }
-              | rest
-            ]
-
-            # Add the target of the jmp, too
-            i_next = parse_instruction(Enum.at(program, h.pc + offset))
-
-            rest = [
-              %InstructionRecord{
-                decoded_instruction: i_next,
-                changed?: false,
-                pc: h.pc + offset,
-                executed: MapSet.put(h.executed, h.pc),
-                acc: h.acc
-              }
-              | rest
-            ]
-
-            run_executions(program, rest)
+            # Add nop & Add the target of the jmp, too
+            enqueue_instr_after_nop(program, h, rest, true)
+            |> (&run_executions(program, enqueue_inst_after_jmp(program, h, &1, false, offset))).()
 
           {:nop, offset} ->
             # Same as jmp, but this time changed? is true in case of jmp
-            # Add nop
-            i_after_nop = parse_instruction(Enum.at(program, h.pc + 1))
-
-            rest = [
-              %InstructionRecord{
-                decoded_instruction: i_after_nop,
-                changed?: false,
-                pc: h.pc + 1,
-                executed: MapSet.put(h.executed, h.pc),
-                acc: h.acc
-              }
-              | rest
-            ]
-
-            # Add the target of the jmp, too
-            i_next = parse_instruction(Enum.at(program, h.pc + offset))
-
-            rest = [
-              %InstructionRecord{
-                decoded_instruction: i_next,
-                changed?: true,
-                pc: h.pc + offset,
-                executed: MapSet.put(h.executed, h.pc),
-                acc: h.acc
-              }
-              | rest
-            ]
-
-            run_executions(program, rest)
+            # Add nop & Add the target of the jmp, too
+            enqueue_instr_after_nop(program, h, rest, false)
+            |> (&run_executions(program, enqueue_inst_after_jmp(program, h, &1, true, offset))).()
         end
 
       true ->
         # changed was already used, so we need to only go straight
         case h.decoded_instruction do
           {:acc, value} ->
-            i_after_acc = parse_instruction(Enum.at(program, h.pc + 1))
-
-            rest = [
-              InstructionRecordMaker.make_record(
-                i_after_acc,
-                true,
-                h.pc + 1,
-                MapSet.put(h.executed, h.pc),
-                h.acc + value
-              )
-              | rest
-            ]
-
-            run_executions(program, rest)
+            run_executions(program, enqueue_instr_after_acc(program, h, rest, true, value))
 
           {:jmp, offset} ->
-            i_next = parse_instruction(Enum.at(program, h.pc + offset))
-
-            rest = [
-              InstructionRecordMaker.make_record(
-                i_next,
-                true,
-                h.pc + offset,
-                MapSet.put(h.executed, h.pc),
-                h.acc
-              )
-              | rest
-            ]
-
-            run_executions(program, rest)
+            run_executions(program, enqueue_inst_after_jmp(program, h, rest, true, offset))
 
           {:nop, _offset} ->
             # Same as jmp, but this time changed? is true in case of jmp
             # Add nop
-            i_after_nop = parse_instruction(Enum.at(program, h.pc + 1))
-
-            rest = [
-              InstructionRecordMaker.make_record(
-                i_after_nop,
-                true,
-                h.pc + 1,
-                MapSet.put(h.executed, h.pc),
-                h.acc
-              )
-              | rest
-            ]
-
-            run_executions(program, rest)
-            # run_executions(program, enqueue_instr_after_nop(program, h, rest))
+            run_executions(program, enqueue_instr_after_nop(program, h, rest, true))
         end
     end
   end
 
   def run_executions(_program, []), do: IO.puts("Out of execution paths!")
 
-  def enqueue_instr_after_nop(program, record, rest) do
+  def enqueue_instr_after_acc(program, record, rest, changed?, value) do
+    i_after_acc = parse_instruction(Enum.at(program, record.pc + 1))
+
+    [
+      InstructionRecordMaker.make_record(
+        i_after_acc,
+        changed?,
+        record.pc + 1,
+        MapSet.put(record.executed, record.pc),
+        record.acc + value
+      )
+      | rest
+    ]
+  end
+
+  def enqueue_instr_after_nop(program, record, rest, changed?) do
     i_after_nop = parse_instruction(Enum.at(program, record.pc + 1))
 
     [
       %InstructionRecord{
         decoded_instruction: i_after_nop,
-        changed?: false,
+        changed?: changed?,
         pc: record.pc + 1,
+        executed: MapSet.put(record.executed, record.pc),
+        acc: record.acc
+      }
+      | rest
+    ]
+  end
+
+  def enqueue_inst_after_jmp(program, record, rest, changed?, offset) do
+    i_next = parse_instruction(Enum.at(program, record.pc + offset))
+
+    [
+      %InstructionRecord{
+        decoded_instruction: i_next,
+        changed?: changed?,
+        pc: record.pc + offset,
         executed: MapSet.put(record.executed, record.pc),
         acc: record.acc
       }
