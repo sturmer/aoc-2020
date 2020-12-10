@@ -15,14 +15,9 @@ defmodule Aoc2020.Day10 do
   end
 
   def count_arrangements(joltages) do
-    joltages_and_wall =
-      [0 | joltages]
-      |> Enum.sort(&(&1 >= &2))
-
-    # The max is at element 0
-    joltages_and_adapter = [Enum.at(joltages_and_wall, 0) + 3 | joltages_and_wall]
-
-    count(joltages_and_adapter, %{})
+    [0 | joltages]
+    |> Enum.sort(&(&1 >= &2))
+    |> count(%{})
   end
 
   # Count backwards from the highest. For a given joltage J,
