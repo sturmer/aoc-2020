@@ -37,16 +37,14 @@ defmodule Aoc2020.Day10 do
   #   4 -> [7] (2 paths)
   # for a total of 8.
   def count([h | other_joltages], paths) do
-    cur =
-      Enum.reduce([1, 2, 3], 0, fn x, acc ->
-        if Map.has_key?(paths, h + x) do
-          acc + Map.get(paths, h + x)
-        else
-          acc
-        end
-      end)
-
-    count(other_joltages, Map.put(paths, h, max(cur, 1)))
+    Enum.reduce([1, 2, 3], 0, fn x, acc ->
+      if Map.has_key?(paths, h + x) do
+        acc + Map.get(paths, h + x)
+      else
+        acc
+      end
+    end)
+    |> (&count(other_joltages, Map.put(paths, h, max(&1, 1)))).()
   end
 
   def count([], paths) do
