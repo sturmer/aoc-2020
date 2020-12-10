@@ -15,7 +15,6 @@ defmodule Aoc2020.Day10 do
         String.split(content, @record_separator, trim: true)
         |> Enum.map(&String.to_integer/1)
         |> fun.()
-        |> IO.puts()
 
       {:error, _} ->
         IO.puts("Error reading file")

@@ -148,11 +148,11 @@ defmodule Day10Test do
     assert Map.get(diffs, 3) == 10
   end
 
-  # test "1" do
-  #   solve1()
-  # end
+  test "part 1" do
+    solve1() == 1856
+  end
 
-  # test "" do
-  #   solve2()
-  # end
+  test "part 2" do
+    assert solve2() == 2_314_037_239_808
+  end
 end
