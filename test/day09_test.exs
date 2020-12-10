@@ -66,7 +66,7 @@ defmodule Day09Test do
     assert sumset_master(stream, 127) == 62
   end
 
-  test "solve 2" do
-    solve2()
-  end
+  # test "solve 2" do
+  #   solve2()
+  # end
 end

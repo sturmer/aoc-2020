@@ -56,21 +56,4 @@ defmodule Day07Test do
 
     assert String.split(input, "\n", trim: true) |> count_bags() == 32
   end
-
-  @tag :skip
-  test "count children" do
-    graph = %{
-      "bright white" => %{"shiny gold" => 1},
-      "dark olive" => %{"dotted black" => 4, "faded blue" => 3},
-      "dark orange" => %{"bright white" => 3, "muted yellow" => 4},
-      "dotted black" => nil,
-      "faded blue" => nil,
-      "light red" => %{"bright white" => 1, "muted yellow" => 2},
-      "muted yellow" => %{"faded blue" => 9, "shiny gold" => 2},
-      "shiny gold" => %{"dark olive" => 1, "vibrant plum" => 2},
-      "vibrant plum" => %{"dotted black" => 6, "faded blue" => 5}
-    }
-
-    assert count_children("shiny gold", graph) == 29
-  end
 end
