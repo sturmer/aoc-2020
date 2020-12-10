@@ -33,7 +33,22 @@ defmodule Aoc2020.Day10 do
     count(joltages_and_adapter, %{})
   end
 
-  # Count backwards from the highest
+  # Count backwards from the highest. For a given joltage J,
+  # the paths to reach the end are the sum of
+  # all the paths from J to the beginning of the rest of the chain.
+  # In the first example, the values are:
+  # 22 19 16 15 12 11 10 7 6 5 4 1 0
+  # From 19 to 22 there's but one path.
+  # So is until 11.
+  # From 10, we can reach either 11 or 12. So the paths to 22 are 2:
+  #   10 -> [11]
+  #   10 -> [12]
+  # where [x] is the number of paths that go to 22 starting from x.
+  # For 4, we have:
+  #   4 -> [5] (4 paths)
+  #   4 -> [6] (2 paths)
+  #   4 -> [7] (2 paths)
+  # for a total of 8.
   def count([h | other_joltages], paths) do
     cur =
       Enum.reduce([1, 2, 3], 0, fn x, acc ->
