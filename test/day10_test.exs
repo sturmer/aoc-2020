@@ -149,7 +149,7 @@ defmodule Day10Test do
   end
 
   test "part 1" do
-    solve1() == 1856
+    assert solve1() == 1856
   end
 
   test "part 2" do

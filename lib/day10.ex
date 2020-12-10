@@ -1,6 +1,4 @@
 defmodule Aoc2020.Day10 do
-  @record_separator "\n"
-
   def solve1 do
     parse_and_solve(&Aoc2020.Day10.adapt/1)
   end
@@ -10,15 +8,10 @@ defmodule Aoc2020.Day10 do
   end
 
   defp parse_and_solve(fun) do
-    case File.read("day10.input.txt") do
-      {:ok, content} ->
-        String.split(content, @record_separator, trim: true)
-        |> Enum.map(&String.to_integer/1)
-        |> fun.()
-
-      {:error, _} ->
-        IO.puts("Error reading file")
-    end
+    File.stream!("day10.input.txt")
+    |> Enum.map(&String.trim/1)
+    |> Enum.map(&String.to_integer/1)
+    |> fun.()
   end
 
   def count_arrangements(joltages) do
@@ -62,8 +55,9 @@ defmodule Aoc2020.Day10 do
   end
 
   def count([], paths) do
-    minkey = Map.keys(paths) |> Enum.min()
-    Map.get(paths, minkey)
+    Map.keys(paths)
+    |> Enum.min()
+    |> (&Map.get(paths, &1)).()
   end
 
   def adapt(joltages) do
