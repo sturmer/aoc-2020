@@ -145,37 +145,23 @@ defmodule Aoc2020.Day12.Part2 do
   def find_distance([m | rest_moves], wp, s, e) do
     instr = String.replace(m, ~r/^(\w)(\d+)$/, "\\1")
     value = String.replace(m, ~r/^(\w)(\d+)$/, "\\2") |> String.to_integer()
+    translate = %{"N" => :north, "S" => :south, "E" => :east, "W" => :west}
+    lrmap = %{"L" => :left, "R" => :right}
 
-    case instr do
-      "F" ->
+    cond do
+      instr == "F" ->
         {s, e} = forward({s, e}, wp, value)
         find_distance(rest_moves, wp, s, e)
 
-      "N" ->
-        wp = move_waypoint(wp, :north, value)
+      String.match?(instr, ~r/^[NSWE]$/) ->
+        wp = move_waypoint(wp, Map.get(translate, instr), value)
         find_distance(rest_moves, wp, s, e)
 
-      "S" ->
-        wp = move_waypoint(wp, :south, value)
+      String.match?(instr, ~r/^[LR]$/) ->
+        wp = rotate(wp, Map.get(lrmap, instr), value)
         find_distance(rest_moves, wp, s, e)
 
-      "W" ->
-        wp = move_waypoint(wp, :west, value)
-        find_distance(rest_moves, wp, s, e)
-
-      "E" ->
-        wp = move_waypoint(wp, :east, value)
-        find_distance(rest_moves, wp, s, e)
-
-      "L" ->
-        wp = rotate_left(wp, value)
-        find_distance(rest_moves, wp, s, e)
-
-      "R" ->
-        wp = rotate_right(wp, value)
-        find_distance(rest_moves, wp, s, e)
-
-      _ ->
+      true ->
         IO.puts("bad parsing: #{instr}")
         exit(:shutdown)
     end
