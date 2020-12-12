@@ -1,4 +1,6 @@
 defmodule Aoc2020.Day12.Part2 do
+  @opposite %{:north => :south, :south => :north, :east => :west, :west => :east}
+
   def solve do
     parse_and_solve(&part_two_solver/1)
   end
@@ -97,6 +99,10 @@ defmodule Aoc2020.Day12.Part2 do
   """
   def rotate_left(wp, value), do: rotate(wp, :left, value)
 
+  def opposite(dir) do
+    Map.get(@opposite, dir)
+  end
+
   @doc ~S"""
       iex> Aoc2020.Day12.Part2.move_waypoint(%{north: 1, east: 10}, :north, 3)
       %{north: 4, east: 10}
@@ -105,40 +111,10 @@ defmodule Aoc2020.Day12.Part2 do
       %{north: -2, east: 10}
   """
   def move_waypoint(wp, dir, val) do
-    # wp can contain any 2 orientations!
-    case dir do
-      :north ->
-        if Map.has_key?(wp, :north) do
-          # either we have north or south
-          %{wp | north: Map.get(wp, :north) + val}
-        else
-          %{wp | south: Map.get(wp, :south) - val}
-        end
-
-      :west ->
-        if Map.has_key?(wp, :west) do
-          %{wp | west: Map.get(wp, :west) + val}
-        else
-          %{wp | east: Map.get(wp, :east) - val}
-        end
-
-      :east ->
-        if Map.has_key?(wp, :east) do
-          %{wp | east: Map.get(wp, :east) + val}
-        else
-          %{wp | west: Map.get(wp, :west) - val}
-        end
-
-      :south ->
-        if Map.has_key?(wp, :south) do
-          %{wp | south: Map.get(wp, :south) + val}
-        else
-          %{wp | north: Map.get(wp, :north) - val}
-        end
-
-      _ ->
-        IO.puts("shouldn't be here")
-        exit(:shutdown)
+    if Map.has_key?(wp, dir) do
+      %{wp | dir => Map.get(wp, dir) + val}
+    else
+      %{wp | opposite(dir) => Map.get(wp, opposite(dir)) - val}
     end
   end
 
