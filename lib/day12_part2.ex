@@ -55,12 +55,21 @@ defmodule Aoc2020.Day12.Part2 do
   end
 
   @doc ~S"""
-      iex> Aoc2020.Day12.Part2.rotate_right(%{north: 4, east: 10}, 90)
+      iex> Aoc2020.Day12.Part2.rotate(%{north: 4, east: 10}, :right, 90)
       %{east: 4, south: 10}
+
+      iex> Aoc2020.Day12.Part2.rotate(%{east: 4, south: 10}, :left, 90)
+      %{north: 4, east: 10}
   """
-  def rotate_right(wp, value) do
+  def rotate(wp, dir, value) do
     steps = div(value, 90)
-    dirs = [:north, :east, :south, :west]
+
+    dirs =
+      if dir == :right do
+        [:north, :east, :south, :west]
+      else
+        [:north, :west, :south, :east]
+      end
 
     [dir1, dir2] = Map.keys(wp)
     starting_point1 = Enum.find_index(dirs, &(&1 == dir1))
@@ -76,28 +85,17 @@ defmodule Aoc2020.Day12.Part2 do
     %{:"#{new_dir1}" => Map.get(wp, dir1), :"#{new_dir2}" => Map.get(wp, dir2)}
   end
 
-  # FIXME(gianluca): so much opportunity for refactoring :)
+  @doc ~S"""
+      iex> Aoc2020.Day12.Part2.rotate_right(%{north: 4, east: 10}, 90)
+      %{east: 4, south: 10}
+  """
+  def rotate_right(wp, value), do: rotate(wp, :right, value)
+
   @doc ~S"""
       iex> Aoc2020.Day12.Part2.rotate_left(%{east: 4, south: 10}, 90)
       %{north: 4, east: 10}
   """
-  def rotate_left(wp, value) do
-    steps = div(value, 90)
-    dirs = [:north, :west, :south, :east]
-
-    [dir1, dir2] = Map.keys(wp)
-    starting_point1 = Enum.find_index(dirs, &(&1 == dir1))
-    new_idx1 = rem(starting_point1 + steps, 4)
-    new_dir1 = Enum.at(dirs, new_idx1)
-    # IO.puts("starting_point1: #{starting_point1}, new_idx1: #{new_idx1}, new_dir1: #{new_dir1}")
-
-    starting_point2 = Enum.find_index(dirs, &(&1 == dir2))
-    new_idx2 = rem(starting_point2 + steps, 4)
-    new_dir2 = Enum.at(dirs, new_idx2)
-    # IO.puts("starting_point2: #{starting_point2}, new_idx2: #{new_idx2}, new_dir2: #{new_dir2}")
-
-    %{:"#{new_dir1}" => Map.get(wp, dir1), :"#{new_dir2}" => Map.get(wp, dir2)}
-  end
+  def rotate_left(wp, value), do: rotate(wp, :left, value)
 
   @doc ~S"""
       iex> Aoc2020.Day12.Part2.move_waypoint(%{north: 1, east: 10}, :north, 3)
