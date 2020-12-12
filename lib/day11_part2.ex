@@ -96,7 +96,7 @@ defmodule Aoc2020.Day11.Part2 do
 
     # """)
 
-    IO.puts("step: #{cnt}")
+    # IO.puts("step: #{cnt}")
 
     if new_map == prev_map do
       count_occupied_seats(new_map)
