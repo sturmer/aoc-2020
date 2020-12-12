@@ -13,6 +13,9 @@ defmodule Day12Part2Test do
       F11
       """
       |> String.split("\n", trim: true)
+      |> Enum.map(fn <<instr, value::binary>> ->
+        {<<instr>>, String.to_integer(value)}
+      end)
       |> find_distance(%{east: 10, north: 1}, 0, 0)
 
     assert i == 286

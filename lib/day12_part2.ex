@@ -8,6 +8,9 @@ defmodule Aoc2020.Day12.Part2 do
   defp parse_and_solve(fun) do
     File.stream!("day12.input.txt")
     |> Enum.map(&String.trim/1)
+    |> Enum.map(fn <<instr, value::binary>> ->
+      {<<instr>>, String.to_integer(value)}
+    end)
     |> fun.()
   end
 
@@ -119,8 +122,7 @@ defmodule Aoc2020.Day12.Part2 do
   end
 
   def find_distance([m | rest_moves], wp, s, e) do
-    instr = String.replace(m, ~r/^(\w)(\d+)$/, "\\1")
-    value = String.replace(m, ~r/^(\w)(\d+)$/, "\\2") |> String.to_integer()
+    {instr, value} = m
     translate = %{"N" => :north, "S" => :south, "E" => :east, "W" => :west}
     lrmap = %{"L" => :left, "R" => :right}
 
