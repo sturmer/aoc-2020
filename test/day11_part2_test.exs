@@ -176,8 +176,8 @@ defmodule Day11Part2Test do
     assert n_seats(input_map, 3, 1) == ["#"]
   end
 
-  # TODO(gianluca):
-  # test "part 2" do
-  #   assert solve2() == nil
-  # end
+  @tag :skip
+  test "part 2" do
+    assert solve() == 2159
+  end
 end

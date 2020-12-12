@@ -1,5 +1,5 @@
 defmodule Aoc2020.Day11.Part2 do
-  def solve2 do
+  def solve do
     parse_and_solve(&part_two_solver/1)
   end
 

@@ -1,5 +1,5 @@
 defmodule Aoc2020.Day11.Part1 do
-  def solve1 do
+  def solve do
     parse_and_solve(&part_one_solver/1)
   end
 
@@ -40,16 +40,6 @@ defmodule Aoc2020.Day11.Part1 do
   def count_evolutions(prev_map) do
     new_map = evolve(prev_map, 0, 0, prev_map)
 
-    # # TODO(gianluca): Remove when done
-    # IO.puts("""
-    # - prev_map: #{inspect(prev_map, pretty: true)}
-    # - new_map: #{inspect(new_map, pretty: true)}
-
-    # """)
-
-    # IO.puts("evolution step: #{cnt}")
-
-    # FIXME(gianluca): cnt is useless :(
     if new_map == prev_map do
       count_occupied_seats(new_map)
     else

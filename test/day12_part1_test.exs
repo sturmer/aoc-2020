@@ -17,4 +17,8 @@ defmodule Day12Part1Test do
 
     assert i == 25
   end
+
+  test "part 1" do
+    assert solve() == 1148
+  end
 end

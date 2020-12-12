@@ -55,8 +55,9 @@ defmodule Day11Part1Test do
              |> String.split("\n", trim: true)
   end
 
-  # TODO(gianluca): write assertiion with result here
-  # test "part 1" do
-  #   solve1()
-  # end
+  # Takes too long
+  @tag :skip
+  test "part 1" do
+    assert solve() == 2453
+  end
 end

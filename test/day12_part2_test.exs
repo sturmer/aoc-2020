@@ -18,8 +18,7 @@ defmodule Day12Part2Test do
     assert i == 286
   end
 
-  # TODO(gianluca):
-  # test "part 2" do
-  #   assert solve2() == nil
-  # end
+  test "part 2" do
+    assert solve() == 52203
+  end
 end
