@@ -16,19 +16,38 @@ defmodule Aoc2020.Day13.Part2 do
     conf = make_conf(Enum.at(lines, 1))
     IO.puts("conf: #{inspect(conf, pretty: true)}")
 
-    initial_times =
-      Map.keys(conf)
-      |> Enum.reduce(%{}, fn k, acc ->
-        Map.put(acc, k, k + Map.get(conf, k))
-      end)
+    next_times = first_after(100_000_000_000_000, conf)
+    first_t = Map.values(next_times) |> Enum.min()
 
     # TODO(gianluca): Remove when done
-    IO.puts("next_times: #{inspect(initial_times, pretty: true)}")
-    verify(conf, initial_times, 0, 0)
+    IO.puts("next_times: #{inspect(next_times, pretty: true)}")
+    IO.puts("first_t: #{first_t}")
+    verify(conf, next_times, first_t, 0)
+  end
+
+  @doc """
+      iex> Aoc2020.Day13.Part2.first_after(3000, %{19 => 3, 13 => 2, 17 => 0})
+      %{13 => 3005, 17 => 3009, 19 => 3005}
+  """
+  def first_after(t, conf) do
+    Map.keys(conf)
+    |> Enum.reduce(%{}, fn key, acc ->
+      multiplier = div(t - Map.get(conf, key), key)
+
+      if multiplier * key + Map.get(conf, key) < t do
+        Map.put(acc, key, (multiplier + 1) * key + Map.get(conf, key))
+      else
+        Map.put(acc, key, multiplier * key + Map.get(conf, key))
+      end
+    end)
   end
 
   @doc """
       iex> Aoc2020.Day13.Part2.verify(%{19 => 3, 13 => 2, 17 => 0}, %{19 => 22, 13 => 15, 17 => 17}, 15, 0)
+      3417
+
+      iex> Aoc2020.Day13.Part2.verify(%{13 => 2, 17 => 0, 19 => 3},
+      ...>    %{13 => 3005, 17 => 3009, 19 => 3005}, 3005, 0)
       3417
 
       iex> Aoc2020.Day13.Part2.verify(%{67 => 0, 7 => 1, 59 => 2, 61 => 3},
@@ -44,7 +63,9 @@ defmodule Aoc2020.Day13.Part2 do
       # IO.puts("y: #{inspect(y, pretty: true)}")
 
       t_next = Map.values(y) |> Enum.min()
-      if rem(cnt, 100_000_000) == 0, do: IO.puts("t: #{t}, t_next: #{t_next}")
+
+      if rem(cnt, 100_000_000) == 0,
+        do: IO.puts("t: #{number_to_human(t)}, t_next: #{number_to_human(t_next)}")
 
       verify(conf, y, t_next, cnt + 1)
     end
