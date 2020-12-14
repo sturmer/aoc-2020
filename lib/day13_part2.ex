@@ -1,4 +1,5 @@
 defmodule Aoc2020.Day13.Part2 do
+  # FIXME(gianluca): THIS DOESN'T WORK
   import Number.Human, only: [number_to_human: 1]
 
   def solve do
@@ -14,14 +15,14 @@ defmodule Aoc2020.Day13.Part2 do
   def solver(lines) do
     # we don't care about the first line
     conf = make_conf(Enum.at(lines, 1))
-    IO.puts("conf: #{inspect(conf, pretty: true)}")
+    # IO.puts("conf: #{inspect(conf, pretty: true)}")
 
     next_times = first_after(100_000_000_000_000, conf)
     first_t = Map.values(next_times) |> Enum.min()
 
     # TODO(gianluca): Remove when done
-    IO.puts("next_times: #{inspect(next_times, pretty: true)}")
-    IO.puts("first_t: #{first_t}")
+    # IO.puts("next_times: #{inspect(next_times, pretty: true)}")
+    # IO.puts("first_t: #{first_t}")
     verify(conf, next_times, first_t, 0)
   end
 
@@ -64,8 +65,8 @@ defmodule Aoc2020.Day13.Part2 do
 
       t_next = Map.values(y) |> Enum.min()
 
-      if rem(cnt, 100_000_000) == 0,
-        do: IO.puts("t: #{number_to_human(t)}, t_next: #{number_to_human(t_next)}")
+      # if rem(cnt, 100_000_000) == 0,
+      #   do: IO.puts("t: #{number_to_human(t)}, t_next: #{number_to_human(t_next)}")
 
       verify(conf, y, t_next, cnt + 1)
     end

@@ -5,7 +5,7 @@ defmodule Day13Part2Test do
 
   defp parse_example(input, expected, start_from \\ 0) do
     conf = make_conf(input)
-    IO.puts("conf: #{inspect(conf, pretty: true)}")
+    # IO.puts("conf: #{inspect(conf, pretty: true)}")
 
     next_times = first_after(start_from, conf)
     first_t = Map.values(next_times) |> Enum.min()
