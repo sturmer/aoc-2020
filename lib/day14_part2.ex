@@ -66,7 +66,7 @@ defmodule Aoc2020.Day14.Part2 do
 
   def execute([], _mask, mem) do
     # TODO(gianluca): Remove when done
-    IO.puts("mem: #{inspect(mem, pretty: true)}")
+    # IO.puts("mem: #{inspect(mem, pretty: true)}")
     Map.values(mem) |> Enum.sum()
   end
 
