@@ -1,17 +1,11 @@
 defmodule Aoc2020.Day14.Part1 do
   import Bitwise
 
-  def solve do
-    parse_and_solve(&part_one_solver/1)
-  end
-
-  defp parse_and_solve(fun) do
+  def solve() do
     File.stream!("day14.input.txt")
     |> Enum.map(&String.trim/1)
-    |> fun.()
+    |> execute(%{1 => [], 0 => []}, %{})
   end
-
-  def part_one_solver(lines), do: execute(lines, %{1 => [], 0 => []}, %{})
 
   @doc """
       iex> Aoc2020.Day14.Part1.execute(["mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
@@ -128,7 +122,7 @@ defmodule Aoc2020.Day14.Part1 do
       String.codepoints(m)
       |> Enum.reverse()
       |> Enum.reduce({%{1 => [], 0 => []}, 0}, fn val, acc ->
-        m = elem(acc, 0)
+        dm = elem(acc, 0)
         pos = elem(acc, 1)
 
         # TODO(gianluca): Remove when done
@@ -136,10 +130,10 @@ defmodule Aoc2020.Day14.Part1 do
         # IO.puts("pos: #{pos}")
 
         if val == "X" do
-          {m, pos + 1}
+          {dm, pos + 1}
         else
           d = String.to_integer(val)
-          {%{m | d => [pos | Map.get(m, d)]}, pos + 1}
+          {%{dm | d => [pos | Map.get(dm, d)]}, pos + 1}
         end
       end)
 
