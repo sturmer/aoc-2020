@@ -4,7 +4,7 @@ defmodule Day16Part2Test do
   import Aoc2020.Day16.Part2
 
   @tag :skip
-  test "part 1" do
+  test "part 2" do
     assert solve() == nil
   end
 end
