@@ -3,6 +3,7 @@ defmodule Day04Test do
   doctest Aoc2020.Day04
   import Aoc2020.Day04
 
+  @tag :skip
   test "part1" do
     fake_input = """
       ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
@@ -23,6 +24,7 @@ defmodule Day04Test do
     assert count_passports(String.split(fake_input, "\n\n", trim: true), 0) == 2
   end
 
+  @tag :skip
   test "part2" do
     fake_input = """
     eyr:1972 cid:100
@@ -56,6 +58,7 @@ defmodule Day04Test do
     assert count_passports_strict(String.split(fake_input, "\n\n", trim: true), 0) == 4
   end
 
+  @tag :skip
   test "are all fields valid?" do
     bag = %{
       "byr" => "1944",
@@ -82,6 +85,7 @@ defmodule Day04Test do
     refute are_all_fields_valid(bag)
   end
 
+  @tag :skip
   test "checks" do
     assert check_year("2002", 1920, 2002)
     refute check_year("2003", 1920, 2002)

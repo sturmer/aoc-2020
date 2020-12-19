@@ -3,6 +3,7 @@ defmodule Day03Test do
   doctest Aoc2020.Day03
   import Aoc2020.Day03
 
+  @tag :skip
   test "part1" do
     input = """
     ..##.......
@@ -21,6 +22,7 @@ defmodule Day03Test do
     assert count_trees(String.split(input, "\n", trim: true)) == 7
   end
 
+  @tag :skip
   test "part2" do
     input = """
     ..##.......

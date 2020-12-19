@@ -3,6 +3,7 @@ defmodule Day12Part2Test do
   doctest Aoc2020.Day12.Part2
   import Aoc2020.Day12.Part2
 
+  @tag :skip
   test "example 1" do
     i =
       """
@@ -21,6 +22,7 @@ defmodule Day12Part2Test do
     assert i == 286
   end
 
+  @tag :skip
   test "part 2" do
     assert solve() == 52203
   end

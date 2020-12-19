@@ -3,6 +3,7 @@ defmodule Day15Test do
   doctest Aoc2020.Day15
   import Aoc2020.Day15
 
+  @tag :skip
   test "part 1" do
     assert solve() == 206
   end

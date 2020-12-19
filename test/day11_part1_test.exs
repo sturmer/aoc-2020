@@ -4,6 +4,7 @@ defmodule Day11Part1Test do
   import Aoc2020.Day11.Part1
 
   # TODO(gianluca): move to doctest
+  @tag :skip
   test "all around free" do
     m = ["LLLL", "L#L."]
     refute all_around_free?(m, 0, 0)
@@ -16,6 +17,7 @@ defmodule Day11Part1Test do
     assert all_around_free?(m, 1, 3)
   end
 
+  @tag :skip
   test "four occupied" do
     m = ["LL##", "L.#.", "LL#."]
     refute four_occupied?(m, 0, 0)
@@ -28,6 +30,7 @@ defmodule Day11Part1Test do
     assert four_occupied?(m, 1, 3)
   end
 
+  @tag :skip
   test "make free/occupied" do
     m = ["LL##", "L.#.", "LL#."]
     assert make_occupied(m, 0, 0) == "#L##"
@@ -36,6 +39,7 @@ defmodule Day11Part1Test do
     assert make_free(m, 0, 4) == "LL##"
   end
 
+  @tag :skip
   test "example 2" do
     input_map =
       """
