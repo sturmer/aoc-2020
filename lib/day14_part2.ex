@@ -29,27 +29,13 @@ defmodule Aoc2020.Day14.Part2 do
         # Make the address as long as the mask
         padded_addr = String.pad_leading(addr, String.length(cur_mask), "0")
 
-        # I know, I know
         val_base_ten = String.to_integer(val_base_two, 2)
-
-        # IO.puts("val_base_two: #{val_base_two}")
-        # IO.puts("val_base_ten: #{val_base_ten}")
-
-        # masked_addr = apply_mask(cur_mask, padded_addr)
-        # IO.puts("padded_addr: #{padded_addr}")
-        # IO.puts("cur_mask: #{cur_mask}")
-        # IO.puts("masked_addr: #{masked_addr}")
-
-        new_mems =
-          apply_mask(cur_mask, padded_addr)
-          |> generate_addresses()
-
-        # IO.puts("Writing #{val_base_ten} to NEW mems: #{inspect(new_mems, pretty: true)}")
 
         # Update mem locations with val_base_two
         overwritten_mem =
-          Enum.reduce(
-            new_mems,
+          apply_mask(cur_mask, padded_addr)
+          |> generate_addresses()
+          |> Enum.reduce(
             mem,
             fn nm, acc ->
               # IO.puts("nm: #{nm}")
@@ -61,17 +47,11 @@ defmodule Aoc2020.Day14.Part2 do
             end
           )
 
-        # IO.puts("mem: #{inspect(mem, pretty: true)}")
-        # IO.puts("overwritten_mem: #{inspect(overwritten_mem, pretty: true)}\n\n")
-
-        # IO.puts("new_mems: #{inspect(new_mems, pretty: true)}")
-        # IO.puts("mem after: #{inspect(mem, pretty: true)}")
         execute(more_lines, cur_mask, overwritten_mem)
     end
   end
 
   def execute([], _mask, mem) do
-    # IO.puts("mem: #{inspect(mem, pretty: true)}")
     Map.values(mem) |> Enum.sum()
   end
 
