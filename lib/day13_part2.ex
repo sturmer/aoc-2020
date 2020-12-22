@@ -1,6 +1,5 @@
 defmodule Aoc2020.Day13.Part2 do
-  # FIXME(gianluca): THIS DOESN'T WORK
-  import Number.Human, only: [number_to_human: 1]
+  import Number.Delimit, only: [number_to_delimited: 2]
 
   def solve do
     parse_and_solve(&solver/1)
@@ -14,108 +13,109 @@ defmodule Aoc2020.Day13.Part2 do
 
   def solver(lines) do
     # we don't care about the first line
+    # conf = make_conf(Enum.at(lines, 1))
+    # # IO.puts("conf: #{inspect(conf, pretty: true)}")
+
+    # # 100_000_000_000_000
+    # [{conf_at_zero, _}] = Enum.filter(conf, fn {_k, v} -> v == 0 end)
+    # max_key = Map.keys(conf) |> Enum.max()
+
+    # b_max = first_conf_match(conf, conf_at_zero, max_key, 0)
+
+    # # IO.puts("max_k: #{max_k}")
+    # a = lcm(conf_at_zero, b_max)
+
+    # IO.puts("conf_at_zero: #{conf_at_zero}")
+    # IO.puts("max_key: #{max_key}")
+    # IO.puts("b_max: #{b_max}")
+    # IO.puts("a: #{a}")
+
     conf = make_conf(Enum.at(lines, 1))
     # IO.puts("conf: #{inspect(conf, pretty: true)}")
 
-    next_times = first_after(100_000_000_000_000, conf)
-    first_t = Map.values(next_times) |> Enum.min()
+    # 100_000_000_000_000
+    [{conf_at_zero, _}] = Enum.filter(conf, fn {_k, v} -> v == 0 end)
 
-    # TODO(gianluca): Remove when done
-    # IO.puts("next_times: #{inspect(next_times, pretty: true)}")
-    # IO.puts("first_t: #{first_t}")
-    verify(conf, next_times, first_t, 0)
+    max_key = Map.keys(conf) |> Enum.min()
+    b_max = first_conf_match(conf, conf_at_zero, max_key, 0)
+
+    a = lcm(conf_at_zero, max_key)
+
+    # IO.puts("conf_at_zero: #{conf_at_zero}")
+    # IO.puts("max_key: #{max_key}")
+    # IO.puts("b_max: #{b_max}")
+    # IO.puts("a: #{a}")
+
+    n = div(100_000_000_000_000 - b_max, a)
+
+    verify(a, b_max, n, conf)
+  end
+
+  def lcm(a, b) do
+    Integer.floor_div(a * b, Integer.gcd(a, b))
   end
 
   @doc """
-      iex> Aoc2020.Day13.Part2.first_after(3000, %{19 => 3, 13 => 2, 17 => 0})
-      %{13 => 3005, 17 => 3009, 19 => 3005}
-  """
-  def first_after(t, conf) do
-    Map.keys(conf)
-    |> Enum.reduce(%{}, fn key, acc ->
-      multiplier = div(t - Map.get(conf, key), key)
+    Each recurrence has the form
+      a * n + b
+    a_max and b_max are such that the next step is maximum.
+    n is the current step of the recurrence.
 
-      if multiplier * key + Map.get(conf, key) < t do
-        Map.put(acc, key, (multiplier + 1) * key + Map.get(conf, key))
-      else
-        Map.put(acc, key, multiplier * key + Map.get(conf, key))
-      end
-    end)
-  end
+      iex> Aoc2020.Day13.Part2.verify(65, 25, 0, %{5 => 0, 13 => 1, 7 => 3, 3 => 4})
+      935
 
-  @doc """
-      iex> Aoc2020.Day13.Part2.verify(%{19 => 3, 13 => 2, 17 => 0}, %{19 => 22, 13 => 15, 17 => 17}, 15, 0)
+    221 is the lcm of the first 2 (better find the max step but this is good enough)
+    102 is the first time the two are in position.
+      iex> Aoc2020.Day13.Part2.verify(221, 102, 0, %{19 => 3, 13 => 2, 17 => 0})
       3417
-
-      iex> Aoc2020.Day13.Part2.verify(%{13 => 2, 17 => 0, 19 => 3},
-      ...>    %{13 => 3005, 17 => 3009, 19 => 3005}, 3005, 0)
-      3417
-
-      iex> Aoc2020.Day13.Part2.verify(%{67 => 0, 7 => 1, 59 => 2, 61 => 3},
-      ...>    %{67 => 67, 7 => 8, 59 => 61, 61 => 64}, 8, 0)
-      754_018
   """
-  def verify(conf, next_times, t, cnt) do
-    if conf_match?(conf, t) do
-      t
+  def verify(a_max, b_max, n, conf) do
+    val = a_max * n + b_max
+    if rem(n, 10_000_000) == 0, do: IO.puts("t: #{number_to_delimited(val, delimiter: ",")}")
+
+    # IO.puts("Trying val: #{val}")
+    # IO.puts("n: #{n}")
+
+    if conf_match?(conf, val) do
+      val
     else
-      y = update_times(next_times, t)
-
-      # IO.puts("y: #{inspect(y, pretty: true)}")
-
-      t_next = Map.values(y) |> Enum.min()
-
-      # if rem(cnt, 100_000_000) == 0,
-      #   do: IO.puts("t: #{number_to_human(t)}, t_next: #{number_to_human(t_next)}")
-
-      verify(conf, y, t_next, cnt + 1)
+      verify(a_max, b_max, n + 1, conf)
     end
   end
 
   @doc """
-      iex> Aoc2020.Day13.Part2.update_times(%{17 => 17, 13 => 15, 19 => 22}, 15)
-      %{17 => 17, 13 => 28, 19 => 22}
+      iex> Aoc2020.Day13.Part2.first_conf_match(%{13 => 2, 17 => 0, 19 => 3}, 17, 13, 0)
+      102
 
-      iex> Aoc2020.Day13.Part2.update_times(%{17 => 17, 13 => 28, 19 => 22}, 17)
-      %{17 => 34, 13 => 28, 19 => 22}
+      iex> Aoc2020.Day13.Part2.first_conf_match(%{5 => 0, 13 => 1}, 5, 13, 0)
+      25
+
+      iex> Aoc2020.Day13.Part2.first_conf_match(%{5 => 0, 13 => 1, 7 => 3}, 5, 7, 0)
+      25
+
+      iex> Aoc2020.Day13.Part2.first_conf_match(%{5 => 0, 13 => 1, 3 => 4}, 5, 3, 0)
+      5
+
+      iex> Aoc2020.Day13.Part2.first_conf_match(%{5 => 0, 3 => 4}, 5, 3, 0)
+      5
+
+      iex> Aoc2020.Day13.Part2.first_conf_match(%{5 => 0, 3 => 1, 4 => 3}, 5, 4, 0)
+      5
+
+      iex> Aoc2020.Day13.Part2.first_conf_match(%{5 => 0, 13 => 1, 7 => 4}, 5, 7, 0)
+      10
   """
-  def update_times(cur_times, t) do
-    Map.keys(cur_times)
-    |> Enum.reduce(%{}, fn key, acc ->
-      if Map.get(cur_times, key) == t do
-        Map.put(acc, key, key + Map.get(cur_times, key))
-      else
-        Map.put(acc, key, Map.get(cur_times, key))
-      end
-    end)
-  end
+  def first_conf_match(conf, a, b, n) do
+    # IO.puts("n: #{n}")
+    # IO.puts("a: #{a}")
+    # IO.puts("b: #{b}")
+    # IO.puts("conf[y]: #{conf[b]}\n\n")
 
-  # @doc """
-  # Initial cur_times should be conf (key + value) for every key-value.
-  #     iex> Aoc2020.Day13.Part2.get_next_times(%{19 => 22, 13 => 15, 17 => 17}, 15)
-  #     17
-
-  #     iex> Aoc2020.Day13.Part2.get_next_times(%{19 => 22, 13 => 28, 17 => 17}, 15)
-  #     17
-  # """
-  def get_next_times(cur_times, cur_t) do
-    # IO.puts("cur_times: #{inspect(cur_times, pretty: true)}")
-    # IO.puts("cur_t: #{cur_t}")
-
-    x =
-      Map.keys(cur_times)
-      |> Enum.reduce(%{}, fn id, acc ->
-        t_i = Map.get(cur_times, id)
-
-        if t_i <= cur_t do
-          Map.put(acc, id, t_i + id)
-        else
-          Map.put(acc, id, t_i)
-        end
-      end)
-
-    # IO.puts("conf: #{inspect(cur_times, pretty: true)} x: #{inspect(x, pretty: true)}")
-    Map.values(x) |> Enum.min()
+    if rem(n * b - conf[b], a) == 0 do
+      n * b - conf[b]
+    else
+      first_conf_match(conf, a, b, n + 1)
+    end
   end
 
   @doc """

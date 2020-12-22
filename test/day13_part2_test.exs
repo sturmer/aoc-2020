@@ -7,33 +7,46 @@ defmodule Day13Part2Test do
     conf = make_conf(input)
     # IO.puts("conf: #{inspect(conf, pretty: true)}")
 
-    next_times = first_after(start_from, conf)
-    first_t = Map.values(next_times) |> Enum.min()
+    # 100_000_000_000_000
+    [{conf_at_zero, _}] = Enum.filter(conf, fn {_k, v} -> v == 0 end)
 
-    assert verify(conf, next_times, first_t, 0) == expected
+    max_key = Map.keys(conf) |> Enum.min()
+    b_max = first_conf_match(conf, conf_at_zero, max_key, 0)
+
+    a = lcm(conf_at_zero, max_key)
+
+    # IO.puts("conf_at_zero: #{conf_at_zero}")
+    # IO.puts("max_key: #{max_key}")
+    # IO.puts("b_max: #{b_max}")
+    # IO.puts("a: #{a}")
+
+    # TODO(gianluca):
+    # Checked until 119_181_009_999_971, then I got scared that my machine
+    # had been pushing if for too long and stopped it.
+
+    n = div(start_from - b_max, a)
+
+    assert verify(a, b_max, n, conf) == expected
   end
 
-  @tag :skip
   test "example 1" do
     parse_example("17,x,13,19", 3417, 3000)
   end
 
-  @tag :skip
   test "example 2" do
     parse_example("7,13,x,x,59,x,31,19", 1_068_781, 1_000_000)
   end
 
-  @tag :skip
   test "example 3" do
     parse_example("67,7,59,61", 754_018)
     parse_example("67,x,7,59,61", 779_210)
     parse_example("67,7,x,59,61", 1_261_476)
   end
 
-  # # @tag timeout: :infinity
-  @tag :skip
   test "longest example" do
-    parse_example("1789,37,47,1889", 1_202_161_486, 1_200_000_000)
+    for i <- 1_200_000_000..1_200_000_099 do
+      parse_example("1789,37,47,1889", 1_202_161_486, i)
+    end
   end
 
   # @tag :skip
