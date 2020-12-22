@@ -71,7 +71,9 @@ defmodule Aoc2020.Day13.Part2 do
   """
   def verify(a_max, b_max, n, conf) do
     val = a_max * n + b_max
-    if rem(n, 10_000_000) == 0, do: IO.puts("t: #{number_to_delimited(val, delimiter: ",")}")
+
+    if rem(n, 10_000_000) == 0 && n > 0,
+      do: IO.puts("t: #{number_to_delimited(val, delimiter: ",")}")
 
     # IO.puts("Trying val: #{val}")
     # IO.puts("n: #{n}")

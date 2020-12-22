@@ -5,6 +5,6 @@ defmodule Day14Part2Test do
 
   @tag :skip
   test "part 2" do
-    assert solve() == 8_566_770_985_168
+    assert solve() == 0
   end
 end

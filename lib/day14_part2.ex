@@ -1,6 +1,4 @@
 defmodule Aoc2020.Day14.Part2 do
-  import Bitwise
-
   def solve do
     parse_and_solve(&part_one_solver/1)
   end
@@ -27,45 +25,52 @@ defmodule Aoc2020.Day14.Part2 do
         # IO.puts("decoded mask: #{inspect(decode_mask(rhs), pretty: true)}")
         execute(more_lines, rhs, mem)
 
-      {:mem, addr, val} ->
-        # mem is %{}
-        # apply_mask(cur_mask, val)
-
+      {:mem, addr, val_base_two} ->
+        # Make the address as long as the mask
         padded_addr = String.pad_leading(addr, String.length(cur_mask), "0")
 
         # I know, I know
-        val_as_num = String.to_integer(val, 2)
-        # TODO(gianluca): Remove when done
-        # IO.puts("val: #{val}")
-        # IO.puts("val_as_num: #{val_as_num}")
+        val_base_ten = String.to_integer(val_base_two, 2)
+
+        # IO.puts("val_base_two: #{val_base_two}")
+        # IO.puts("val_base_ten: #{val_base_ten}")
+
+        # masked_addr = apply_mask(cur_mask, padded_addr)
+        # IO.puts("padded_addr: #{padded_addr}")
+        # IO.puts("cur_mask: #{cur_mask}")
+        # IO.puts("masked_addr: #{masked_addr}")
 
         new_mems =
           apply_mask(cur_mask, padded_addr)
           |> generate_addresses()
 
-        # Update mem locations with val
-        mem =
+        # IO.puts("Writing #{val_base_ten} to NEW mems: #{inspect(new_mems, pretty: true)}")
+
+        # Update mem locations with val_base_two
+        overwritten_mem =
           Enum.reduce(
             new_mems,
             mem,
             fn nm, acc ->
-              init = nm |> String.to_integer(2)
-              Map.put(acc, init, val_as_num)
+              # IO.puts("nm: #{nm}")
+
+              # IO.puts("write [#{val_base_two}]2 / [#{val_base_ten}]|10 to: [#{nm}]|10")
+
+              # Just overwrite the value
+              Map.put(acc, nm, val_base_ten)
             end
           )
 
-        # TODO(gianluca): Remove when done
         # IO.puts("mem: #{inspect(mem, pretty: true)}")
+        # IO.puts("overwritten_mem: #{inspect(overwritten_mem, pretty: true)}\n\n")
 
-        # TODO(gianluca): Remove when done
         # IO.puts("new_mems: #{inspect(new_mems, pretty: true)}")
         # IO.puts("mem after: #{inspect(mem, pretty: true)}")
-        execute(more_lines, cur_mask, mem)
+        execute(more_lines, cur_mask, overwritten_mem)
     end
   end
 
   def execute([], _mask, mem) do
-    # TODO(gianluca): Remove when done
     # IO.puts("mem: #{inspect(mem, pretty: true)}")
     Map.values(mem) |> Enum.sum()
   end
@@ -73,6 +78,9 @@ defmodule Aoc2020.Day14.Part2 do
   @doc """
       iex> Aoc2020.Day14.Part2.apply_mask("00X1001X", "00101010")
       "00X1101X"
+
+      iex> Aoc2020.Day14.Part2.apply_mask("X1001X", "100110")
+      "X1011X"
   """
   def apply_mask(m, v) do
     Enum.zip(String.codepoints(m), String.codepoints(v))
@@ -89,7 +97,22 @@ defmodule Aoc2020.Day14.Part2 do
 
   @doc """
       iex> Aoc2020.Day14.Part2.generate_addresses("0X1001X")
-      ["0110010", "0110011", "0010010", "0010011"]
+      [50, 51, 18, 19]
+
+      iex> a = Aoc2020.Day14.Part2.generate_addresses("00000000000000000000000000000000X0XX")
+      iex> Enum.count(a)
+      8
+      iex> a
+      [2, 3, 0, 1, 10, 11, 8, 9]
+
+      iex> b = Aoc2020.Day14.Part2.generate_addresses("0000000000000000000000X000000000X0XX")
+      iex> Enum.count(b)
+      16
+
+      # iex> c = Aoc2020.Day14.Part2.generate_addresses("X00X000X0X0")
+      iex> c = Aoc2020.Day14.Part2.generate_addresses("XXXX")
+      iex> Enum.count(c)
+      16
   """
   def generate_addresses(v) do
     String.codepoints(v)
@@ -105,8 +128,7 @@ defmodule Aoc2020.Day14.Part2 do
           add_floating(acc)
       end
     end)
-
-    # |> Enum.map(&Enum.concat/1)
+    |> Enum.map(&String.to_integer(&1, 2))
   end
 
   @doc """
@@ -115,12 +137,19 @@ defmodule Aoc2020.Day14.Part2 do
 
       iex> Aoc2020.Day14.Part2.add_floating(["10", "01", "00", "11"])
       ["110", "111", "000", "001", "010", "011", "100", "101"]
+
+      iex> Aoc2020.Day14.Part2.add_floating([])
+      ["1", "0"]
   """
   def add_floating(lst) do
-    Enum.map(lst, &(&1 <> "0"))
-    |> Enum.reduce([], fn str, acc ->
-      [str | [String.replace(str, ~r/0$/, "1") | acc]]
-    end)
+    if length(lst) == 0 do
+      ["1", "0"]
+    else
+      Enum.map(lst, &(&1 <> "0"))
+      |> Enum.reduce([], fn str, acc ->
+        [str | [String.replace(str, ~r/0$/, "1") | acc]]
+      end)
+    end
   end
 
   @doc """
@@ -152,8 +181,7 @@ defmodule Aoc2020.Day14.Part2 do
       {:mask, rhs}
     else
       address = String.replace(lhs, ~r/^mem\[(\d+)\]$/, "\\1")
-      # TODO(gianluca): Remove when done
-      # IO.puts("address: #{address}")
+
       a =
         address
         |> String.to_integer()
