@@ -49,8 +49,8 @@ defmodule Day13Part2Test do
     end
   end
 
-  # @tag :skip
-  # test "part 2" do
-  #   assert solve() == 4207
-  # end
+  @tag :skip
+  test "part 2" do
+    assert solve() == 4207
+  end
 end

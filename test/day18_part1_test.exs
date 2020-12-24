@@ -3,6 +3,7 @@ defmodule Day18Part1Test do
   doctest Aoc2020.Day18.Part1
   import Aoc2020.Day18.Part1
 
+  # FIXME(gianluca): broken
   @tag :skip
   test "part 1" do
     assert solve() == 21071
