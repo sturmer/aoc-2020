@@ -3,8 +3,7 @@ defmodule Day16Part2Test do
   doctest Aoc2020.Day16.Part2
   import Aoc2020.Day16.Part2
 
-  @tag :skip
   test "part 2" do
-    assert solve() == nil
+    assert solve() == 3_429_967_441_937
   end
 end
