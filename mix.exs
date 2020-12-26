@@ -22,7 +22,8 @@ defmodule Aoc2020.MixProject do
   defp deps do
     [
       {:number, "~> 1.0.3"},
-      {:matrix_reloaded, "~> 2.2"}
+      {:matrix_reloaded, "~> 2.2"},
+      {:matrex, "~> 0.6"}
     ]
   end
 end
