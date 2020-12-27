@@ -134,12 +134,6 @@ defmodule Day17Part1Test do
     assert evolve(@hc_at_time_0, 0, 0) == count_active(@hc_at_time_1)
   end
 
-  @tag :skip
-  test "evolve @2" do
-    new_hc = evolve(@hc_at_time_1, 0, 0)
-    assert new_hc == @hc_at_time_2
-  end
-
   test "evolve plane" do
     assert evolve_plane(@hc_at_time_0, 0) == @hc_at_time_1[0]
   end
