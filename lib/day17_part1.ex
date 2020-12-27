@@ -27,8 +27,6 @@ defmodule Aoc2020.Day17.Part1 do
           end
         end)
 
-      # IO.puts("j_acc: #{inspect(j_acc, pretty: true, charlists: :as_list)}")
-
       [j_acc | acc]
     end)
   end
@@ -44,8 +42,7 @@ defmodule Aoc2020.Day17.Part1 do
       }
     }
 
-    count = evolve(hc, 0, 6)
-    IO.puts("count: #{count}")
+    evolve(hc, 1, 6)
   end
 
   @doc """
@@ -71,8 +68,6 @@ defmodule Aoc2020.Day17.Part1 do
     The 2D matrix for z == i is the same as the one for z == -i.
   """
   def evolve(hc, cur_iter, max_iter) do
-    IO.puts("\ncycle: #{cur_iter}, hc: #{inspect(hc, pretty: true, charlists: :as_list)}\n\n")
-
     if cur_iter > max_iter do
       count_active(hc)
     else
@@ -91,8 +86,6 @@ defmodule Aoc2020.Day17.Part1 do
     if !Map.has_key?(hc, z) do
       new_plane = %Hyperplane{upper_left: hc[0].upper_left, lower_right: hc[0].lower_right}
 
-      # IO.puts("new_plane: #{inspect(new_plane, pretty: true, charlists: :as_list)}")
-      # |> evolve_plane(z)
       evolve_plane(Map.merge(hc, %{z => new_plane}), z)
     else
       # for every element of grid, get active neighbors and the counts
@@ -108,9 +101,6 @@ defmodule Aoc2020.Day17.Part1 do
         |> Enum.reduce(%{}, fn p, acc ->
           Map.put(acc, p, 1)
         end)
-
-      # IO.puts("inactive: #{inspect(inactive, pretty: true, charlists: :as_list)}")
-      # IO.puts("active: #{inspect(active, pretty: true, charlists: :as_list)}")
 
       new_active =
         Map.merge(inactive, active)
@@ -142,17 +132,12 @@ defmodule Aoc2020.Day17.Part1 do
     {x0, _y0} = upper_left
     {u, _v} = lower_right
 
-    x =
-      for i <- (x0 - 1)..(u + 1) do
-        for j <- (x0 - 1)..(u + 1) do
-          {i, j}
-        end
+    for i <- (x0 - 1)..(u + 1) do
+      for j <- (x0 - 1)..(u + 1) do
+        {i, j}
       end
-      |> List.flatten()
-
-    # IO.puts("x: #{inspect(x, pretty: true, charlists: :as_list)}")
-    IO.puts("Enum.min_max(x): #{inspect(Enum.min_max(x))}")
-    x
+    end
+    |> List.flatten()
   end
 
   @doc """
@@ -167,32 +152,8 @@ defmodule Aoc2020.Day17.Part1 do
       iex> hc = %{0 => %Hyperplane{active: active}}
       iex> Aoc2020.Day17.Part1.find_new_state(0, hc, nc)
       0
-
-      # iex> p = {0, {2, 2}}
-      # iex> plane = MapSet.new([
-      # ...>    {0, 1},
-      # ...>    {1, 2},
-      # ...>    {2, 0}, {2, 1}, {2, 2}
-      # ...>  ])
-      # iex> hc = %{0 => plane}
-      # iex> nc = Aoc2020.Day17.Part1.find_neighbors_coordinates(p)
-      # iex> Aoc2020.Day17.Part1.find_new_state(1, hc, nc)
-      # 1
-
-      # iex> p = {1, {1, 1}}
-      # iex> plane = MapSet.new([
-      # ...>    {0, 1},
-      # ...>    {1, 2},
-      # ...>    {2, 0}, {2, 1}, {2, 2}
-      # ...>  ])
-      # iex> hc = %{0 => plane}
-      # iex> nc = Aoc2020.Day17.Part1.find_neighbors_coordinates(p)
-      # iex> Aoc2020.Day17.Part1.find_new_state(0, hc, nc)
-      # 0
   """
   def find_new_state(val, hc, nc) do
-    # IO.puts("nc: #{inspect(nc, pretty: true, charlists: :as_list)}")
-
     counts =
       nc
       |> Enum.reduce(0, fn np, acc ->
@@ -206,8 +167,6 @@ defmodule Aoc2020.Day17.Part1 do
           acc
         end
       end)
-
-    # IO.puts("counts: #{inspect(counts, pretty: true, charlists: :as_list)}\n")
 
     case val do
       1 ->

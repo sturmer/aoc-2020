@@ -131,8 +131,7 @@ defmodule Day17Part1Test do
   end
 
   test "evolve" do
-    new_hc = evolve(@hc_at_time_0, 0, 0)
-    assert new_hc == @hc_at_time_1
+    assert evolve(@hc_at_time_0, 0, 0) == count_active(@hc_at_time_1)
   end
 
   @tag :skip
@@ -142,31 +141,26 @@ defmodule Day17Part1Test do
   end
 
   test "evolve plane" do
-    evolved = evolve_plane(@hc_at_time_0, 0)
-    # IO.puts("evolved: #{inspect(evolved, pretty: true, charlists: :as_list)}")
-    assert evolved == @hc_at_time_1[0]
+    assert evolve_plane(@hc_at_time_0, 0) == @hc_at_time_1[0]
   end
 
   test "evolve plane z=0 from t=1 to t=2" do
     evolved = evolve_plane(@hc_at_time_1, 0)
-    # IO.puts("evolved: #{inspect(evolved, pretty: true, charlists: :as_list)}")
     assert evolved = @hc_at_time_2[0]
   end
 
   test "evolve plane z=2 from t=1 to t=2" do
     z = 2
     evolved = evolve_plane(@hc_at_time_1, z)
-    IO.puts("evolved: #{inspect(evolved, pretty: true, charlists: :as_list)}")
     assert evolved = @hc_at_time_2[z]
   end
 
-  @tag :skip
   test "part 1" do
-    assert solve() == 21071
+    assert solve() == 232
   end
 
-  test "example 1" do
-    cnt = evolve(@hc_at_time_0, 0, 6)
+  test "example from problem statement" do
+    cnt = evolve(@hc_at_time_0, 1, 6)
     assert cnt == 112
   end
 
@@ -174,12 +168,6 @@ defmodule Day17Part1Test do
     ps
     |> Enum.each(fn p ->
       nc = find_neighbors_coordinates(p)
-
-      # nc
-      # |> Enum.map(fn n ->
-      #   {z, {x, y}} = n
-      #   IO.puts("n: (#{x},#{y},#{z}) (state: #{is_active?(x, y, z, hc)})")
-      # end)
 
       assert find_new_state(0, hc, nc) == expected_state
     end)
